@@ -195,34 +195,49 @@ Task8：
 建立 StoryForge 基础开发环境。
 
 
+## 集成方案
+
+采用 **electron-vite** 作为 Electron + Vite 集成工具。
+理由：
+- 开箱即用，统一管理主进程、预加载脚本、渲染进程的编译与热更新；
+- 社区维护活跃，文档完善。
+
+
 ## 涉及文件
 
-
-
+```
 package.json
 
 electron/
-└── main.ts
+├── main.ts          # Electron 主进程入口
+└── preload.ts       # 预加载脚本（contextBridge）
 
 src/
-├── main.tsx
-└── App.tsx
+├── index.html       # 渲染进程 HTML 入口（BrowserWindow 加载此文件）
+├── main.tsx         # React 渲染入口
+└── App.tsx          # React 根组件
 
-vite.config.ts
+electron.vite.config.ts   # electron-vite 配置（替代 vite.config.ts）
 
-tsconfig.json
-
+tsconfig.json              # 根配置
+tsconfig.node.json         # 主进程/预加载 TS 配置
+tsconfig.web.json          # 渲染进程 TS 配置
+```
 
 
 ## 实现内容
 
 
+
 完成：
 
-- Electron 主进程；
-- React 渲染环境；
-- TypeScript 配置；
-- Vite 开发环境。
+- electron-vite 项目初始化；
+- Electron 主进程（main.ts）；
+- 预加载脚本（preload.ts）；
+- index.html（渲染进程 HTML 入口）；
+- React 渲染入口（main.tsx、App.tsx）；
+- TypeScript 配置（tsconfig.json + tsconfig.node.json + tsconfig.web.json）；
+- electron-vite 配置（electron.vite.config.ts）。
 
 
 启动后显示 StoryForge 主窗口。
@@ -240,9 +255,19 @@ npm run dev
 
 Electron 窗口正常打开；
 页面显示 StoryForge。
-依赖
 
-无。
+
+## 依赖
+
+开发依赖：
+- electron
+- electron-vite
+- @vitejs/plugin-react
+- typescript
+
+运行依赖：
+- react
+- react-dom
 
 Task 2：实现剧情数据模型
 目标

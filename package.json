@@ -1,0 +1,27 @@
+{
+  "name": "storyforge",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^31.2.0",
+    "electron-vite": "^2.3.0",
+    "jsdom": "^24.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^1.6.0"
+  }
+}
