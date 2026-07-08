@@ -7,7 +7,26 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:electron": "electron-vite build && electron-builder"
+  },
+  "build": {
+    "appId": "com.storyforge.app",
+    "productName": "StoryForge",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "dependencies": {
     "html-to-image": "^1.11.13",
@@ -22,6 +41,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "electron": "^31.2.0",
+    "electron-builder": "^26.15.3",
     "electron-vite": "^2.3.0",
     "jsdom": "^24.1.0",
     "typescript": "^5.5.0",
