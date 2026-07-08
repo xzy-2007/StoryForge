@@ -11,4 +11,9 @@ describe('App', () => {
     render(<App />)
     expect(screen.getByText('StoryForge')).toBeDefined()
   })
+
+  it('T3: renders the editor layout', () => {
+    render(<App />)
+    expect(screen.getByTestId('editor-layout')).toBeDefined()
+  })
 })

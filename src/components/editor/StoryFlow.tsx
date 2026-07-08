@@ -65,7 +65,7 @@ export function useStoryFlowState(initialNodesList: Node[] = initialNodes) {
     [setNodes, setEdges]
   )
 
-  return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad }
+  return { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad }
 }
 
 export function StoryFlow() {

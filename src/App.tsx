@@ -1,9 +1,11 @@
+import { useCallback } from 'react'
 import { ReactFlowProvider } from 'reactflow'
 import { StoryFlow, initialNodes, useStoryFlowState } from './components/editor/StoryFlow'
+import { Toolbar } from './components/editor/Toolbar'
 import { loadProject, type ProjectData } from './services/ProjectManager'
 
 function App() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad } =
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad, setNodes, setEdges } =
     useStoryFlowState(initialNodes)
 
   const onSaveClick = () => {
@@ -23,14 +25,15 @@ function App() {
     handleLoad(loadProject({ version: '1.0', name: 'Untitled Project', nodes: initialNodes, edges: [] }))
   }
 
+  const onClearClick = () => {
+    setNodes([])
+    setEdges([])
+  }
+
   return (
-    <div>
+    <div data-testid="editor-layout">
       <h1>StoryForge</h1>
-      <div>
-        <button onClick={onNewClick}>New</button>
-        <button onClick={onSaveClick}>Save</button>
-        <button onClick={onLoadClick}>Load</button>
-      </div>
+      <Toolbar onNew={onNewClick} onSave={onSaveClick} onLoad={onLoadClick} onClear={onClearClick} />
       <ReactFlowProvider>
         <StoryFlow />
       </ReactFlowProvider>
