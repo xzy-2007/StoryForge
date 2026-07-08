@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, act } from '@testing-library/react'
+import { render, screen, act, renderHook } from '@testing-library/react'
 import { ReactFlowProvider, useReactFlow, type ReactFlowInstance } from 'reactflow'
-import { StoryFlow } from '../../../src/components/editor/StoryFlow'
+import { StoryFlow, useStoryFlowState } from '../../../src/components/editor/StoryFlow'
 
 let rfInstance: ReactFlowInstance | null = null
 
@@ -14,6 +14,15 @@ function InstanceCapturer() {
 function renderWithFlow(ui: React.ReactElement) {
   return render(<ReactFlowProvider>{ui}</ReactFlowProvider>)
 }
+
+const loadedNodes = [
+  {
+    id: 'loaded-1',
+    type: 'storyNode' as const,
+    position: { x: 100, y: 100 },
+    data: { title: 'Loaded Node', content: 'Restored', type: 'DIALOGUE' },
+  },
+]
 
 describe('StoryFlow', () => {
   beforeEach(() => {
@@ -60,5 +69,21 @@ describe('StoryFlow', () => {
       rfInstance!.deleteElements({ edges: [{ id: 'e1' }] })
     })
     expect(rfInstance!.getEdges()).toHaveLength(0)
+  })
+
+  it('T4: can load nodes from project data', () => {
+    const { result } = renderHook(() => useStoryFlowState([]))
+
+    act(() => {
+      result.current.handleLoad({
+        version: '1.0',
+        name: 'Test',
+        nodes: loadedNodes,
+        edges: [],
+      })
+    })
+
+    expect(result.current.nodes).toHaveLength(1)
+    expect(result.current.nodes[0].data.title).toBe('Loaded Node')
   })
 })

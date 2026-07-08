@@ -533,39 +533,69 @@ Task 6：实现项目保存和加载
 实现项目文件管理。
 
 文件
-src/services/
 
-ProjectManager.ts
+src/services/
+├── ProjectManager.ts
+├── ProjectManager.test.ts (新增)
+
+src/components/editor/
+├── StoryFlow.tsx (更新 — 提取 useStoryFlowState hook)
+└── StoryFlow.test.tsx (更新 — 新增 T4 加载测试)
+
+src/App.tsx (更新 — 演示保存/加载按钮)
+
 功能
 
 支持：
 
-新建项目；
-保存 JSON；
-加载 JSON。
+- 新建项目；
+- 保存 JSON（序列化 nodes/edges）；
+- 加载 JSON（反序列化并更新画布）。
+
+状态提升
+
+提取 useStoryFlowState hook 统一管理 nodes/edges 状态：
+- 提供 onNodesChange / onEdgesChange / onConnect 供 React Flow 使用
+- 提供 handleSave / handleLoad 供外部保存/加载调用
 
 文件格式：
 
+ProjectData:
 {
-"name":"example",
-"nodes":[],
-"edges":[]
+  "version": "1.0",
+  "name": "Untitled Project",
+  "nodes": [...],
+  "edges": [...]
 }
 
 NodeType 使用字符串保存。
 
 测试
+T1
 
-流程：
-
-创建节点；
-创建连接；
-保存；
-加载。
+saveProject 序列化节点和边。
 
 验证：
 
-数据完全一致。
+返回完整 ProjectData，字段匹配。
+
+T2
+
+loadProject 反序列化数据。
+
+验证：
+
+恢复后节点和边数量正确。
+
+T3
+
+handleLoad 更新状态后节点可显示。
+
+验证：
+
+加载后画布节点文本可见。
+
+--- 已完成 ---
 
 Task 7：完善编辑器工作台 UI
 目标
