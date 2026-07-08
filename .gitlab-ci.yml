@@ -1,0 +1,35 @@
+stages:
+  - test
+  - build
+
+unit-test:
+  stage: test
+  image: node:20-alpine
+  before_script:
+    - apk add --no-cache python3 make g++
+    - npm ci
+  script:
+    - npm test
+  artifacts:
+    reports:
+      junit: junit.xml
+    when: always
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+
+build:
+  stage: build
+  image: node:20-alpine
+  before_script:
+    - apk add --no-cache python3 make g++
+    - npm ci
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - out/
+    expire_in: 30 days
+  only:
+    - main

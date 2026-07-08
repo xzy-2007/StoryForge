@@ -1,20 +1,17 @@
-import { useCallback, type MouseEvent as ReactMouseEvent } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
+import { type MouseEvent as ReactMouseEvent } from 'react'
 import ReactFlow, {
   Background,
   Controls,
-  addEdge,
-  useNodesState,
-  useEdgesState,
+  SelectionMode,
   type Node,
   type Edge,
-  type Connection,
-  type OnConnect,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { StoryNodeComponent } from './StoryNodeComponent'
-import { saveProject, type ProjectData } from '../../services/ProjectManager'
+import { useTheme } from '../../theme/ThemeContext'
 
-const nodeTypes = {
+export const nodeTypes = {
   storyNode: StoryNodeComponent,
 }
 
@@ -24,8 +21,8 @@ export const initialNodes: Node[] = [
     type: 'storyNode',
     position: { x: 150, y: 100 },
     data: {
-      title: 'Opening Scene',
-      content: 'Once upon a time...',
+      title: '开场场景',
+      content: '很久很久以前...',
       type: 'DIALOGUE',
     },
   },
@@ -34,76 +31,54 @@ export const initialNodes: Node[] = [
     type: 'storyNode',
     position: { x: 450, y: 200 },
     data: {
-      title: 'First Choice',
-      content: 'What happens next?',
+      title: '第一个选择',
+      content: '接下来会发生什么？',
       type: 'CHOICE',
     },
   },
 ]
 
-export function useStoryFlowState(initialNodesList: Node[] = initialNodes) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodesList)
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
-
-  const onConnect: OnConnect = useCallback(
-    (params: Connection) => {
-      setEdges((eds) => addEdge(params, eds))
-    },
-    [setEdges]
-  )
-
-  const handleSave = useCallback((): ProjectData => {
-    return saveProject(nodes, edges)
-  }, [nodes, edges])
-
-  const handleLoad = useCallback(
-    (data: { nodes: Node[]; edges: Edge[] }) => {
-      setNodes(data.nodes)
-      setEdges(data.edges)
-    },
-    [setNodes, setEdges]
-  )
-
-  const selectedNode = nodes.find((n) => n.selected) ?? null
-
-  const onNodeClick = useCallback((_event: ReactMouseEvent, node: Node) => {
-    // selection is handled by onNodesChange, this is for additional click handling
-  }, [])
-
-  const onPaneClick = useCallback(() => {
-    // deselect handled by onNodesChange
-  }, [])
-
-  const updateNodeData = useCallback(
-    (nodeId: string, data: Record<string, string>) => {
-      setNodes((nds) =>
-        nds.map((n) =>
-          n.id === nodeId ? { ...n, data: { ...n.data, ...data } } : n
-        )
-      )
-    },
-    [setNodes]
-  )
-
-  return { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad, selectedNode, onNodeClick, onPaneClick, updateNodeData }
+interface StoryFlowProps {
+  nodes: Node[]
+  edges: Edge[]
+  onNodesChange: any
+  onEdgesChange: any
+  onConnect: any
+  onNodeClick?: (event: ReactMouseEvent, node: Node) => void
+  onPaneClick?: () => void
+  onNodeContextMenu?: (event: ReactMouseEvent, node: Node) => void
+  reactFlowWrapperRef?: React.RefObject<HTMLDivElement | null>
+  reactFlowInstance?: any
 }
 
-export function StoryFlow() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStoryFlowState()
+export function StoryFlow({ nodes, edges, onNodesChange, onEdgesChange, onConnect, onNodeClick, onPaneClick, onNodeContextMenu, reactFlowWrapperRef, reactFlowInstance }: StoryFlowProps) {
+  const { theme } = useTheme()
 
   return (
-    <div data-testid="story-flow" style={{ width: '100%', height: 500 }}>
+    <div
+      data-testid="story-flow"
+      ref={reactFlowWrapperRef}
+      style={{ width: '100%', height: '100%' }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={onNodeClick}
+        onPaneClick={onPaneClick}
+        onNodeContextMenu={onNodeContextMenu}
         nodeTypes={nodeTypes}
         fitView
+        selectionMode={SelectionMode.Partial}
+        selectionOnDrag
+        panOnDrag={[1, 2]}
+        selectNodesOnDrag={false}
+        style={{ background: theme.bg }}
       >
-        <Background />
-        <Controls />
+        <Background color={theme.border} style={{ opacity: 0.25 }} />
+        <Controls style={{ background: theme.surfaceAlt, color: theme.text, border: `1px solid ${theme.border}`, borderRadius: 6 }} />
       </ReactFlow>
     </div>
   )

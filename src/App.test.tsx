@@ -9,11 +9,12 @@ describe('App', () => {
 
   it('renders StoryForge title', () => {
     render(<App />)
-    expect(screen.getByText('StoryForge')).toBeDefined()
+    expect(screen.getByText('StoryForge - 故事编辑器')).toBeDefined()
   })
 
-  it('T3: renders the editor layout', () => {
+  it('T3: renders the editor layout with toolbar and story flow', () => {
     render(<App />)
-    expect(screen.getByTestId('editor-layout')).toBeDefined()
+    expect(screen.getByTestId('toolbar')).toBeDefined()
+    expect(screen.getByTestId('story-flow')).toBeDefined()
   })
 })

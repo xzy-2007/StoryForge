@@ -2,9 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { ReactFlowProvider } from 'reactflow'
 import { StoryNodeComponent } from '../../../src/components/editor/StoryNodeComponent'
+import { ThemeProvider } from '../../../src/theme/ThemeContext'
 
 function renderWithFlow(ui: React.ReactElement) {
-  return render(<ReactFlowProvider>{ui}</ReactFlowProvider>)
+  return render(
+    <ThemeProvider>
+      <ReactFlowProvider>{ui}</ReactFlowProvider>
+    </ThemeProvider>
+  )
 }
 
 const baseProps = {
@@ -24,11 +29,11 @@ describe('StoryNodeComponent', () => {
       <StoryNodeComponent
         {...baseProps}
         id="test-1"
-        data={{ title: 'Opening Scene', content: 'Once upon a time...' }}
+        data={{ title: '开场场景', content: '很久很久以前...' }}
       />
     )
 
-    expect(screen.getByText('Opening Scene')).toBeDefined()
+    expect(screen.getByText('开场场景')).toBeDefined()
   })
 
   it('renders the node content', () => {
@@ -36,14 +41,14 @@ describe('StoryNodeComponent', () => {
       <StoryNodeComponent
         {...baseProps}
         id="test-2"
-        data={{ title: 'Choice', content: 'Make a decision' }}
+        data={{ title: '选择', content: '做个决定' }}
       />
     )
 
-    expect(screen.getByText('Make a decision')).toBeDefined()
+    expect(screen.getByText('做个决定')).toBeDefined()
   })
 
-  it('T2: renders the node type label', () => {
+  it('T2: renders the node type label in Chinese', () => {
     renderWithFlow(
       <StoryNodeComponent
         {...baseProps}
@@ -52,6 +57,6 @@ describe('StoryNodeComponent', () => {
       />
     )
 
-    expect(screen.getByText('DIALOGUE')).toBeDefined()
+    expect(screen.getByText('💬 对话')).toBeDefined()
   })
 })
