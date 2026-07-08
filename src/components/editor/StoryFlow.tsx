@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, type MouseEvent as ReactMouseEvent } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -6,6 +6,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   type Node,
+  type Edge,
   type Connection,
   type OnConnect,
 } from 'reactflow'
@@ -63,7 +64,28 @@ export function useStoryFlowState(initialNodesList: Node[] = initialNodes) {
     [setNodes, setEdges]
   )
 
-  return { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad }
+  const selectedNode = nodes.find((n) => n.selected) ?? null
+
+  const onNodeClick = useCallback((_event: ReactMouseEvent, node: Node) => {
+    // selection is handled by onNodesChange, this is for additional click handling
+  }, [])
+
+  const onPaneClick = useCallback(() => {
+    // deselect handled by onNodesChange
+  }, [])
+
+  const updateNodeData = useCallback(
+    (nodeId: string, data: Record<string, string>) => {
+      setNodes((nds) =>
+        nds.map((n) =>
+          n.id === nodeId ? { ...n, data: { ...n.data, ...data } } : n
+        )
+      )
+    },
+    [setNodes]
+  )
+
+  return { nodes, edges, setNodes, setEdges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad, selectedNode, onNodeClick, onPaneClick, updateNodeData }
 }
 
 export function StoryFlow() {

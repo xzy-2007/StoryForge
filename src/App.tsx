@@ -1,10 +1,11 @@
 import { ReactFlowProvider } from 'reactflow'
 import { StoryFlow, initialNodes, useStoryFlowState } from './components/editor/StoryFlow'
 import { Toolbar } from './components/editor/Toolbar'
+import { Inspector } from './components/inspector/Inspector'
 import type { ProjectData } from './services/ProjectManager'
 
 function App() {
-  const { handleSave, handleLoad, setNodes, setEdges } =
+  const { handleSave, handleLoad, setNodes, setEdges, selectedNode, updateNodeData } =
     useStoryFlowState(initialNodes)
 
   const onSaveClick = () => {
@@ -33,9 +34,14 @@ function App() {
     <div data-testid="editor-layout">
       <h1>StoryForge</h1>
       <Toolbar onNew={onNewClick} onSave={onSaveClick} onLoad={onLoadClick} onClear={onClearClick} />
-      <ReactFlowProvider>
-        <StoryFlow />
-      </ReactFlowProvider>
+      <div style={{ display: 'flex' }}>
+        <div style={{ flex: 1 }}>
+          <ReactFlowProvider>
+            <StoryFlow />
+          </ReactFlowProvider>
+        </div>
+        <Inspector selectedNode={selectedNode} onUpdateNode={updateNodeData} />
+      </div>
     </div>
   )
 }
