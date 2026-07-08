@@ -366,66 +366,67 @@ Project
 
 JSON 序列化；
 JSON 反序列化。
-Task 3：实现 GraphManager 剧情关系管理核心
+Task 3：实现剧情节点连接与分支管理
 目标
 
-实现剧情图的数据管理。
+实现节点连接和剧情分支基础支持。
 
 文件
-src/core/
 
-GraphManager.ts
+src/components/editor/
+├── StoryFlow.tsx
+├── StoryFlow.test.tsx (更新)
+└── StoryNodeComponent.tsx (更新)
 
-GraphManager.test.ts
 功能
-节点管理
 
-支持：
+状态管理重构
 
-添加节点；
-删除节点。
+将 StoryFlow 从静态节点迁移为 React Flow 推荐状态管理：
+- useNodesState
+- useEdgesState
 
-删除节点时：
+节点连接
 
-自动删除相关 Edge。
+- 支持通过拖拽端口创建 Edge（onConnect + addEdge）
+- 支持删除 Edge（onEdgesChange）
 
-连接管理
+剧情分支基础支持
 
-支持：
+- 节点显示类型标签（DIALOGUE / CHOICE）
+- CHOICE 节点允许多个输出连接
 
-创建 Edge：
+实现说明
 
-输入：
-
-source Node
-target Node
-
-删除 Edge：
-
-输入：
-
-Edge id
-
-修改 Edge：
-
-更新 label。
+使用 React Flow 内置状态管理，未单独创建 GraphManager 类。
+状态封装在 StoryFlow 组件内部，Task4 保存加载时需提升。
 
 测试
-测试1
+T1
 
-创建两个节点并连接。
+StoryFlow 渲染初始节点。
+
+验证：
+
+节点文本在 DOM 中可见。
+
+T2
+
+通过 addEdges 创建 Edge。
 
 验证：
 
 Edge 数量增加。
 
-测试2
+T3
 
-删除连接。
+通过 deleteElements 删除 Edge。
 
 验证：
 
-Edge 删除。
+Edge 数量归零。
+
+--- 已完成 ---
 
 测试3
 
