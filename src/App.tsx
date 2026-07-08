@@ -1,11 +1,10 @@
-import { useCallback } from 'react'
 import { ReactFlowProvider } from 'reactflow'
 import { StoryFlow, initialNodes, useStoryFlowState } from './components/editor/StoryFlow'
 import { Toolbar } from './components/editor/Toolbar'
-import { loadProject, type ProjectData } from './services/ProjectManager'
+import type { ProjectData } from './services/ProjectManager'
 
 function App() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleSave, handleLoad, setNodes, setEdges } =
+  const { handleSave, handleLoad, setNodes, setEdges } =
     useStoryFlowState(initialNodes)
 
   const onSaveClick = () => {
@@ -17,12 +16,12 @@ function App() {
     const json = localStorage.getItem('storyforge-project')
     if (json) {
       const data: ProjectData = JSON.parse(json)
-      handleLoad(loadProject(data))
+      handleLoad(data)
     }
   }
 
   const onNewClick = () => {
-    handleLoad(loadProject({ version: '1.0', name: 'Untitled Project', nodes: initialNodes, edges: [] }))
+    handleLoad({ nodes: initialNodes, edges: [] })
   }
 
   const onClearClick = () => {

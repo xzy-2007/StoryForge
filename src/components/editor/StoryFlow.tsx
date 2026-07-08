@@ -7,13 +7,11 @@ import ReactFlow, {
   useEdgesState,
   type Node,
   type Connection,
-  type OnNodesChange,
-  type OnEdgesChange,
   type OnConnect,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { StoryNodeComponent } from './StoryNodeComponent'
-import { saveProject, loadProject, type ProjectData } from '../../services/ProjectManager'
+import { saveProject, type ProjectData } from '../../services/ProjectManager'
 
 const nodeTypes = {
   storyNode: StoryNodeComponent,
@@ -58,7 +56,7 @@ export function useStoryFlowState(initialNodesList: Node[] = initialNodes) {
   }, [nodes, edges])
 
   const handleLoad = useCallback(
-    (data: ProjectData) => {
+    (data: { nodes: Node[]; edges: Edge[] }) => {
       setNodes(data.nodes)
       setEdges(data.edges)
     },
