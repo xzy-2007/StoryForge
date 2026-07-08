@@ -8,7 +8,7 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "test": "vitest run",
-    "build:electron": "electron-vite build && electron-builder"
+"build:electron": "electron-vite build && electron-builder --publish never"
   },
   "build": {
     "appId": "com.storyforge.app",
